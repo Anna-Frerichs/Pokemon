@@ -24,7 +24,7 @@ function eff(atk::Normal, def::Normal)
     return normally_effective
 end
 
-eff(Normal,Normal)
+eff(Normal(),Normal())
 
 #Other Types, but the same
 function eff(atk::Type, def::Type) where {Type}
@@ -39,9 +39,13 @@ end
 
 #eff(atk::AbstractType, def::AbstractType) where {AbstractType} = true
 
+eff(Fire(),Fire())
+
 #Other Types, but different
 function eff(atk::Type1, def::Type2) where {Type1, Type2}
-    if Type1 == Fire
+    if Type1 == Normal
+        return normally_effective
+    elseif Type1 == Fire
         if Type2 == Water
             return not_very_effective
         elseif Type2 == Grass || Type2 == Ice
@@ -112,6 +116,7 @@ end
 
 eff(Water(), Fire())
 eff(Fighting(), Fighting())
+eff(Normal(),Water())
 
 function eff_string(atk, def)
     x = eff(atk, def)
@@ -128,8 +133,12 @@ end
 
 eff_string(Normal(), Normal())
 
-#als multiple Dispatch
-#eff(atk::)
+function attack(atk, def)
+    x = eff_string(atk,def)
+    return "A Pokemon of the Type $(typeof(atk)) attacked a Pokemon of the Type $(typeof(def)). The attack was $(x)!"
+end
+
+attack(Normal(),Water())
 
 
 
